@@ -1,31 +1,63 @@
+import { useNavigate } from "react-router-dom";
+
 export default function Dashboard() {
-  const logout = () => {
-    localStorage.removeItem("token");
-    window.location.href = "/";
+  const navigate = useNavigate();
+  const results = JSON.parse(localStorage.getItem("results") || "{}");
+
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/");
   };
 
   return (
-    <div style={styles.page}>
-      <div style={styles.nav}>
-        <h2 style={styles.logo}>🌿 GreenPath</h2>
-        <button style={styles.logout} onClick={logout}>Logout</button>
+    <div style={{ maxWidth: 600, margin: "60px auto", fontFamily: "sans-serif", padding: 20 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <h2>🌿 GreenPath AI — Results</h2>
+        <button onClick={handleLogout}
+          style={{ padding: "8px 16px", background: "#c62828", color: "white", border: "none", borderRadius: 5, cursor: "pointer" }}>
+          Logout
+        </button>
       </div>
-      <div style={styles.body}>
-        <h2 style={styles.title}>Welcome to GreenPath!</h2>
-        <p style={styles.sub}>Upload your CV and let AI analyse your career match.</p>
-        <a href="/upload" style={styles.btn}>Upload CV →</a>
-      </div>
+
+      {results.match_score !== undefined ? (
+        <div>
+          <div style={{ background: "#e8f5e9", padding: 20, borderRadius: 10, marginTop: 20 }}>
+            <h3>Match Score</h3>
+            <div style={{ fontSize: 48, fontWeight: "bold", color: "#2e7d32" }}>
+              {results.match_score}%
+            </div>
+          </div>
+
+          <div style={{ background: "#fff3e0", padding: 20, borderRadius: 10, marginTop: 20 }}>
+            <h3>Missing Skills</h3>
+            {results.missing_skills && results.missing_skills.length > 0 ? (
+              <ul>
+                {results.missing_skills.map((skill, i) => (
+                  <li key={i} style={{ marginBottom: 8 }}>{skill}</li>
+                ))}
+              </ul>
+            ) : (
+              <p>No missing skills — great match! 🎉</p>
+            )}
+          </div>
+
+          <button onClick={() => navigate("/upload")}
+            style={{ marginTop: 20, width: "100%", padding: 12, background: "#2e7d32",
+              color: "white", border: "none", borderRadius: 5, cursor: "pointer", fontSize: 16 }}>
+            Analyse Another CV
+          </button>
+        </div>
+      ) : (
+        <div style={{ marginTop: 40, textAlign: "center" }}>
+          <h3>Welcome to GreenPath!</h3>
+          <p>Upload your CV and let AI analyse your career match.</p>
+          <button onClick={() => navigate("/upload")}
+            style={{ padding: "12px 24px", background: "#2e7d32", color: "white",
+              border: "none", borderRadius: 5, cursor: "pointer", fontSize: 16 }}>
+            Upload CV →
+          </button>
+        </div>
+      )}
     </div>
   );
 }
-
-const styles = {
-  page:   { minHeight:"100vh", background:"#f0faf5" },
-  nav:    { display:"flex", justifyContent:"space-between", alignItems:"center", padding:"16px 32px", background:"#fff", boxShadow:"0 1px 8px rgba(0,0,0,0.06)" },
-  logo:   { color:"#0F6E56" },
-  logout: { padding:"8px 16px", background:"transparent", border:"1px solid #0F6E56", color:"#0F6E56", borderRadius:"8px", cursor:"pointer" },
-  body:   { maxWidth:"600px", margin:"60px auto", textAlign:"center", padding:"0 20px" },
-  title:  { fontSize:"28px", color:"#1a1a1a", marginBottom:"12px" },
-  sub:    { color:"#666", fontSize:"16px", marginBottom:"32px" },
-  btn:    { display:"inline-block", padding:"14px 32px", background:"#0F6E56", color:"#fff", borderRadius:"10px", textDecoration:"none", fontSize:"16px" }
-};
