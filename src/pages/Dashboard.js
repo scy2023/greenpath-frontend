@@ -1,8 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-const COURSE_LINKS = {
-  "default": "https://www.coursera.org/search?query=",
-};
+
 
 function getCourseLink(skill) {
   return `https://www.coursera.org/search?query=${encodeURIComponent(skill)}&price=free`;
