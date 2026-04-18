@@ -15,35 +15,52 @@ export default function Upload() {
 
     setLoading(true);
 
-    const formData = new FormData();
-    formData.append("cv", file);
+    try {
+      const formData = new FormData();
+      formData.append("cv", file);
 
-    const token = localStorage.getItem("token");
+      const token = localStorage.getItem("token");
 
-    // Step 1 — Upload CV
-    const uploadRes = await fetch(`${process.env.REACT_APP_API_URL}/api/cv/upload`, {
-      method: "POST",
-      headers: { Authorization: `Bearer ${token}` },
-      body: formData,
-    });
-    const uploadData = await uploadRes.json();
+      // Step 1 — Upload CV
+      const uploadRes = await fetch(`${process.env.REACT_APP_API_URL}/api/cv/upload`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+        body: formData,
+      });
+      const uploadData = await uploadRes.json();
+      console.log("Upload result:", uploadData);
 
-    // Step 2 — Analyze CV against role
-    const analyzeRes = await fetch(`${process.env.REACT_APP_API_URL}/api/analyze`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ cvData: uploadData.cvData, role }),
-    });
-    const analyzeData = await analyzeRes.json();
+      if (!uploadData.cvData) {
+        alert("CV upload failed: " + JSON.stringify(uploadData));
+        setLoading(false);
+        return;
+      }
+
+      // Step 2 — Analyze
+      const analyzeRes = await fetch(`${process.env.REACT_APP_API_URL}/api/analyze`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ cvData: uploadData.cvData, role }),
+      });
+      const analyzeData = await analyzeRes.json();
+      console.log("Analyze result:", analyzeData);
+
+      if (analyzeData.error) {
+        alert("Analyze failed: " + analyzeData.error);
+        setLoading(false);
+        return;
+      }
+
+      localStorage.setItem("results", JSON.stringify(analyzeData));
+      navigate("/dashboard");
+    } catch (err) {
+      alert("Error: " + err.message);
+    }
 
     setLoading(false);
-
-    // Save results and go to dashboard
-    localStorage.setItem("results", JSON.stringify(analyzeData));
-    navigate("/dashboard");
   };
 
   return (
@@ -62,7 +79,7 @@ export default function Upload() {
       <button onClick={handleUpload} disabled={loading}
         style={{ width: "100%", padding: 10, background: loading ? "#aaa" : "#2e7d32",
           color: "white", border: "none", borderRadius: 5, cursor: "pointer" }}>
-        {loading ? "Analyzing... please wait" : "Upload & Analyze"}
+        {loading ? "Analysing... please wait" : "Upload & Analyse"}
       </button>
     </div>
   );
