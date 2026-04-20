@@ -3,8 +3,8 @@ import Upload from "./pages/Upload";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
-import Blog from "./pages/blog";
-import Privacy from "./pages/privacy";
+import Blog from "./pages/Blog";
+import Privacy from "./pages/Privacy";
 export default function App() {
   return (
     <BrowserRouter>
