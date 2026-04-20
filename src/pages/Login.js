@@ -1,64 +1,54 @@
 import { useState } from "react";
-import axios from "axios";
-import { GoogleLogin } from "@react-oauth/google";
-
-const API = process.env.REACT_APP_API_URL;
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [msg, setMsg] = useState("");
+  const navigate = useNavigate();
 
-  const login = async () => {
-    try {
-      const res = await axios.post(`${API}/api/auth/login`, { email, password });
-      localStorage.setItem("token", res.data.token);
-      window.location.href = "/dashboard";
-    } catch {
-      setMsg("Login failed. Check your details.");
-    }
-  };
-
-  const handleGoogleSuccess = async (credentialResponse) => {
-    try {
-      const res = await axios.post(`${API}/api/auth/google`, {
-        token: credentialResponse.credential
-      });
-      localStorage.setItem("token", res.data.token);
-      window.location.href = "/dashboard";
-    } catch {
-      setMsg("Google login failed.");
+  const handleLogin = async () => {
+    const res = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+    const data = await res.json();
+    if (data.token) {
+      localStorage.setItem("token", data.token);
+      const pending = localStorage.getItem("pendingCV");
+      if (pending) navigate("/upload");
+      else navigate("/dashboard");
+    } else {
+      alert("Login failed");
     }
   };
 
   return (
-    <div style={styles.page}>
-      <div style={styles.card}>
-        <h1 style={styles.logo}>🌿 GreenPath</h1>
-        <p style={styles.sub}>AI-powered CV Analysis</p>
-        <input style={styles.input} placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} />
-        <input style={styles.input} type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} />
-        <button style={styles.btn} onClick={login}>Sign In</button>
-        <div style={styles.divider}><span>or</span></div>
-        <div style={styles.google}>
-          <GoogleLogin onSuccess={handleGoogleSuccess} onError={() => setMsg("Google login failed.")} />
+    <div style={{ minHeight: "100vh", background: "#f5f7f5", display: "flex",
+      alignItems: "center", justifyContent: "center", fontFamily: "'Segoe UI', sans-serif" }}>
+      <div style={{ background: "white", borderRadius: 16, padding: 40,
+        boxShadow: "0 4px 12px rgba(0,0,0,0.08)", width: "100%", maxWidth: 400 }}>
+        <div style={{ textAlign: "center", marginBottom: 30 }}>
+          <span style={{ fontSize: 40 }}>🚀</span>
+          <h2 style={{ color: "#1a237e", margin: "10px 0 4px" }}>CareerUpdater</h2>
+          <p style={{ color: "#666", margin: 0 }}>Sign in to see your results</p>
         </div>
-        {msg && <p style={styles.err}>{msg}</p>}
-        <p style={styles.link}>No account? <a href="/register">Register</a></p>
+        <input placeholder="Email" value={email} onChange={e => setEmail(e.target.value)}
+          style={{ display: "block", width: "93%", marginBottom: 12,
+            padding: 12, borderRadius: 8, border: "1px solid #ddd", fontSize: 15 }} />
+        <input placeholder="Password" type="password" value={password}
+          onChange={e => setPassword(e.target.value)}
+          style={{ display: "block", width: "93%", marginBottom: 20,
+            padding: 12, borderRadius: 8, border: "1px solid #ddd", fontSize: 15 }} />
+        <button onClick={handleLogin}
+          style={{ width: "100%", padding: 12, background: "#1a237e", color: "white",
+            border: "none", borderRadius: 8, cursor: "pointer", fontSize: 16, fontWeight: "bold" }}>
+          Login
+        </button>
+        <p style={{ textAlign: "center", marginTop: 16, color: "#666" }}>
+          No account? <a href="/register" style={{ color: "#1a237e", fontWeight: "bold" }}>Register here</a>
+        </p>
       </div>
     </div>
   );
 }
-
-const styles = {
-  page:    { minHeight:"100vh", display:"flex", alignItems:"center", justifyContent:"center", background:"#f0faf5" },
-  card:    { background:"#fff", padding:"40px", borderRadius:"16px", boxShadow:"0 4px 24px rgba(0,0,0,0.08)", width:"360px", textAlign:"center" },
-  logo:    { color:"#0F6E56", fontSize:"28px", marginBottom:"4px" },
-  sub:     { color:"#888", fontSize:"14px", marginBottom:"24px" },
-  input:   { display:"block", width:"100%", padding:"12px", marginBottom:"12px", borderRadius:"8px", border:"1px solid #ddd", fontSize:"14px" },
-  btn:     { width:"100%", padding:"12px", background:"#0F6E56", color:"#fff", border:"none", borderRadius:"8px", fontSize:"15px", cursor:"pointer" },
-  divider: { margin:"16px 0", color:"#aaa", fontSize:"13px" },
-  google:  { display:"flex", justifyContent:"center", marginBottom:"12px" },
-  err:     { color:"red", fontSize:"13px", marginTop:"8px" },
-  link:    { marginTop:"16px", fontSize:"13px", color:"#666" }
-};

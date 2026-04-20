@@ -1,45 +1,52 @@
 import { useState } from "react";
-import axios from "axios";
-
-const API = process.env.REACT_APP_API_URL;
+import { useNavigate } from "react-router-dom";
 
 export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [msg, setMsg] = useState("");
+  const navigate = useNavigate();
 
-  const register = async () => {
-    try {
-      await axios.post(`${API}/api/auth/register`, { email, password });
-      setMsg("Registered! Please login.");
-      setTimeout(() => window.location.href = "/", 1500);
-    } catch {
-      setMsg("Registration failed.");
+  const handleRegister = async () => {
+    const res = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+    const data = await res.text();
+    if (data === "User registered") {
+      alert("Registered! Please login.");
+      navigate("/");
+    } else {
+      alert("Registration failed");
     }
   };
 
   return (
-    <div style={styles.page}>
-      <div style={styles.card}>
-        <h1 style={styles.logo}>🌿 GreenPath</h1>
-        <p style={styles.sub}>Create your account</p>
-        <input style={styles.input} placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} />
-        <input style={styles.input} type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} />
-        <button style={styles.btn} onClick={register}>Create Account</button>
-        {msg && <p style={styles.ok}>{msg}</p>}
-        <p style={styles.link}>Have account? <a href="/">Login</a></p>
+    <div style={{ minHeight: "100vh", background: "#f5f7f5", display: "flex",
+      alignItems: "center", justifyContent: "center", fontFamily: "'Segoe UI', sans-serif" }}>
+      <div style={{ background: "white", borderRadius: 16, padding: 40,
+        boxShadow: "0 4px 12px rgba(0,0,0,0.08)", width: "100%", maxWidth: 400 }}>
+        <div style={{ textAlign: "center", marginBottom: 30 }}>
+          <span style={{ fontSize: 40 }}>🚀</span>
+          <h2 style={{ color: "#1a237e", margin: "10px 0 4px" }}>CareerUpdater</h2>
+          <p style={{ color: "#666", margin: 0 }}>Create your free account</p>
+        </div>
+        <input placeholder="Email" value={email} onChange={e => setEmail(e.target.value)}
+          style={{ display: "block", width: "93%", marginBottom: 12,
+            padding: 12, borderRadius: 8, border: "1px solid #ddd", fontSize: 15 }} />
+        <input placeholder="Password" type="password" value={password}
+          onChange={e => setPassword(e.target.value)}
+          style={{ display: "block", width: "93%", marginBottom: 20,
+            padding: 12, borderRadius: 8, border: "1px solid #ddd", fontSize: 15 }} />
+        <button onClick={handleRegister}
+          style={{ width: "100%", padding: 12, background: "#1a237e", color: "white",
+            border: "none", borderRadius: 8, cursor: "pointer", fontSize: 16, fontWeight: "bold" }}>
+          Create Account
+        </button>
+        <p style={{ textAlign: "center", marginTop: 16, color: "#666" }}>
+          Already have an account? <a href="/" style={{ color: "#1a237e", fontWeight: "bold" }}>Login here</a>
+        </p>
       </div>
     </div>
   );
 }
-
-const styles = {
-  page:  { minHeight:"100vh", display:"flex", alignItems:"center", justifyContent:"center", background:"#f0faf5" },
-  card:  { background:"#fff", padding:"40px", borderRadius:"16px", boxShadow:"0 4px 24px rgba(0,0,0,0.08)", width:"360px", textAlign:"center" },
-  logo:  { color:"#0F6E56", fontSize:"28px", marginBottom:"4px" },
-  sub:   { color:"#888", fontSize:"14px", marginBottom:"24px" },
-  input: { display:"block", width:"100%", padding:"12px", marginBottom:"12px", borderRadius:"8px", border:"1px solid #ddd", fontSize:"14px" },
-  btn:   { width:"100%", padding:"12px", background:"#0F6E56", color:"#fff", border:"none", borderRadius:"8px", fontSize:"15px", cursor:"pointer" },
-  ok:    { color:"green", fontSize:"13px", marginTop:"8px" },
-  link:  { marginTop:"16px", fontSize:"13px", color:"#666" }
-};
