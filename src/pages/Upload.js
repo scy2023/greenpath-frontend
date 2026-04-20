@@ -244,6 +244,4 @@ export default function Upload() {
       </div>
     </div>
   );
-}/ /   u p d a t e d  
- / /   u p d a t e d  
- 
+}
