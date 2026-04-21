@@ -6,6 +6,7 @@ import Dashboard from "./pages/Dashboard";
 import Blog from "./pages/Blog";
 import Privacy from "./pages/Privacy";
 import Jobs from "./pages/Jobs";
+import CVBuilder from "./pages/CVBuilder";
 export default function App() {
   return (
     <BrowserRouter>
@@ -18,6 +19,7 @@ export default function App() {
         <Route path="/blog" element={<Blog />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/jobs" element={<Jobs />} />
+        <Route path="/cv-builder" element={<CVBuilder />} />
       </Routes>
     </BrowserRouter>
   );

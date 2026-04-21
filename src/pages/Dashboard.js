@@ -209,6 +209,12 @@ export default function Dashboard() {
                 ))}
               </div>
             )}
+            <button onClick={() => navigate("/cv-builder")}
+  style={{ width: "100%", padding: 16, background: "#e8eaf6", color: "#1a237e",
+    border: "2px solid #1a237e", borderRadius: 12, cursor: "pointer", fontSize: 16,
+    fontWeight: "bold", marginBottom: 12 }}>
+  📄 Build Tailored CV for This Role
+</button>
 
             {/* Find Jobs Button */}
             <button onClick={() => navigate("/jobs")}
