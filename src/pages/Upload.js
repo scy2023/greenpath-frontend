@@ -79,6 +79,7 @@ export default function Upload() {
       }
 
       localStorage.removeItem("pendingCV");
+      localStorage.setItem("searchedRole", role);
       localStorage.setItem("results", JSON.stringify(analyzeData));
       setTimeout(() => navigate("/dashboard"), 500);
     } catch (err) {
@@ -180,7 +181,7 @@ export default function Upload() {
           gap: 16, marginTop: 24 }}>
           {[["🎯", "Match Score", "See how well you match"],
             ["📚", "Missing Skills", "Know what to learn"],
-            ["🗺️", "Roadmap", "Premium learning path"]
+            ["🔍", "Nearby Jobs", "Find jobs near you"]
           ].map(([icon, title, desc], i) => (
             <div key={i} style={{ background: "white", borderRadius: 12, padding: 16,
               textAlign: "center", boxShadow: "0 2px 8px rgba(0,0,0,0.06)" }}>
