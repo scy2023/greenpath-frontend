@@ -70,8 +70,8 @@ export default function Dashboard() {
       <div style={{ background: "white", padding: "16px 32px", display: "flex",
         justifyContent: "space-between", alignItems: "center", boxShadow: "0 2px 8px rgba(0,0,0,0.08)" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <span style={{ fontSize: 24 }}>🌿</span>
-          <span style={{ fontSize: 20, fontWeight: "bold", color: "#2e7d32" }}>GreenPath AI</span>
+          <span style={{ fontSize: 24 }}>🚀</span>
+          <span style={{ fontSize: 20, fontWeight: "bold", color: "#1a237e" }}>CareerUpdater</span>
           {isPremium && <span style={{ background: "#ffd700", padding: "2px 10px",
             borderRadius: 20, fontSize: 12, fontWeight: "bold" }}>⭐ PREMIUM</span>}
         </div>
@@ -210,21 +210,29 @@ export default function Dashboard() {
               </div>
             )}
 
+            {/* Find Jobs Button */}
+            <button onClick={() => navigate("/jobs")}
+              style={{ width: "100%", padding: 16, background: "#e8f5e9", color: "#2e7d32",
+                border: "2px solid #2e7d32", borderRadius: 12, cursor: "pointer", fontSize: 16,
+                fontWeight: "bold", marginBottom: 12 }}>
+              🔍 Find Matching Jobs Near Me
+            </button>
+
             <button onClick={handleNewAnalysis}
-              style={{ width: "100%", padding: 16, background: "#2e7d32", color: "white",
+              style={{ width: "100%", padding: 16, background: "#1a237e", color: "white",
                 border: "none", borderRadius: 12, cursor: "pointer", fontSize: 16,
-                fontWeight: "bold", boxShadow: "0 4px 12px rgba(46,125,50,0.3)" }}>
+                fontWeight: "bold", boxShadow: "0 4px 12px rgba(26,35,126,0.3)" }}>
               🔄 Analyse Another CV
             </button>
           </>
         ) : (
           <div style={{ background: "white", borderRadius: 16, padding: 60,
             textAlign: "center", boxShadow: "0 4px 12px rgba(0,0,0,0.08)" }}>
-            <span style={{ fontSize: 60 }}>🌿</span>
-            <h2 style={{ color: "#333", marginTop: 20 }}>Welcome to GreenPath!</h2>
+            <span style={{ fontSize: 60 }}>🚀</span>
+            <h2 style={{ color: "#333", marginTop: 20 }}>Welcome to CareerUpdater!</h2>
             <p style={{ color: "#666", marginBottom: 30 }}>Upload your CV and let AI analyse your career match.</p>
             <button onClick={() => navigate("/upload")}
-              style={{ padding: "14px 32px", background: "#2e7d32", color: "white",
+              style={{ padding: "14px 32px", background: "#1a237e", color: "white",
                 border: "none", borderRadius: 12, cursor: "pointer", fontSize: 16, fontWeight: "bold" }}>
               Upload CV →
             </button>
